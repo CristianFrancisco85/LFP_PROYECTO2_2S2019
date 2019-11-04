@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proyecto2_Scanner_LL1Parser", "Proyecto2_Scanner_LL1Parser.csproj", "{2D6DDEE7-7B64-4F06-A128-C8419BA6CBE9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D6DDEE7-7B64-4F06-A128-C8419BA6CBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D6DDEE7-7B64-4F06-A128-C8419BA6CBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D6DDEE7-7B64-4F06-A128-C8419BA6CBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D6DDEE7-7B64-4F06-A128-C8419BA6CBE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0BF5D6C9-1811-4BD5-8584-9B9B40FB9C1C}
+	EndGlobalSection
+EndGlobal
