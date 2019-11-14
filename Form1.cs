@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 using Proyecto2_Scanner_LL1Parser;
 
@@ -16,6 +10,7 @@ namespace Proyecto2_Scanner_LL1Parser
     {
         Scanner scanner = new Scanner();
         Parser parser = new Parser();
+        public static String RutaC, RutaP,Ruta;
 
 
         public Form1()
@@ -61,8 +56,47 @@ namespace Proyecto2_Scanner_LL1Parser
             {
                 parser = new Parser();
                 parser.Parsing();
-                TxtCodeOutput.Text = parser.GetPythonCode();
-                TxtConsoleOutput.Text = parser.GetConsoleOutPut();
+                if (!parser.Errores)
+                {
+                    TxtCodeOutput.Text = parser.GetPythonCode();
+                    TxtConsoleOutput.Text = parser.GetConsoleOutPut();
+
+                    if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+                    {
+                        Ruta = saveFileDialog2.FileName;
+                        RutaC = Path.GetDirectoryName(Ruta) + "\\" + Path.GetFileNameWithoutExtension(Ruta) + ".cs";
+                        RutaP = Path.GetDirectoryName(Ruta) + "\\" + Path.GetFileNameWithoutExtension(Ruta) + ".py";
+                        FileStream MyStream = new FileStream(RutaC, FileMode.Create, FileAccess.Write, FileShare.None);
+                        StreamWriter MyWriter = new StreamWriter(MyStream);
+                        MyWriter.Write(TxtCodeInput.Text);
+                        MyWriter.Close();
+                        MyStream.Close();
+                        FileStream MyStream2 = new FileStream(RutaP, FileMode.Create, FileAccess.Write, FileShare.None);
+                        StreamWriter MyWriter2 = new StreamWriter(MyStream2);
+                        MyWriter2.Write(TxtCodeOutput.Text);
+                        MyWriter2.Close();
+                        MyStream2.Close();
+                        MessageBox.Show("Guardados Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+                    {
+                        Ruta = saveFileDialog2.FileName;
+                        parser.GenerateHTMLError();
+                    }
+
+                }
+            
+            }
+            else
+            {
+                if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+                {
+                    Ruta = saveFileDialog2.FileName;
+                    scanner.GenerateHTMLError();
+                }
             }
         }
 
@@ -77,5 +111,28 @@ namespace Proyecto2_Scanner_LL1Parser
             Program.TablaS = new ArrayList(); 
 
     }
+
+        private void AbrirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                String RutaA = openFileDialog1.FileName;
+                TxtCodeInput.Text = File.ReadAllText(RutaA);
+            }
+        }
+
+        private void GuardarComoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                String RutaG = saveFileDialog1.FileName;
+                FileStream MyStream = new FileStream(RutaG, FileMode.Create, FileAccess.Write, FileShare.None);
+                StreamWriter MyWriter = new StreamWriter(MyStream);
+                MyWriter.Write(TxtCodeInput.Text);
+                MyWriter.Close();
+                MyStream.Close();
+                MessageBox.Show("Guardado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }

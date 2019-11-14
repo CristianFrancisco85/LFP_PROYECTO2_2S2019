@@ -251,31 +251,80 @@ namespace Proyecto2_Scanner_LL1Parser
 
         public void GenerateHTMLToken()
         {
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "Archivo HTML (*.html)|*.html";
-            saveFile.DefaultExt = "html";
-            saveFile.AddExtension = true;
-            saveFile.Title = "Guardar Tabla de Simbolos";
-            if (saveFile.ShowDialog() == DialogResult.OK)
+            String RutaH = Path.GetDirectoryName(Form1.Ruta) + "\\" + Path.GetFileNameWithoutExtension(Form1.Ruta)+"TablaTokens" + ".html";
+            FileStream MyStream = new FileStream(RutaH, FileMode.Create, FileAccess.Write, FileShare.None);
+            StreamWriter MyWriter = new StreamWriter(MyStream);
+            MyWriter.WriteLine("<font size=\"2\" face=\"Segoe UI Emoji\" >");
+            MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE TOKENS</strong></h2>");
+
+            MyWriter.WriteLine("<h4><strong>Hora y Fecha: " + DateTime.Now.ToString() + "</strong></h4>");
+            MyWriter.WriteLine("<h4><strong>Ruta Archivo HTML: " + RutaH + "</strong></h4>");
+            MyWriter.WriteLine("<h4><strong>Ruta Archivo C#: " + Form1.RutaC + "</strong></h4>");
+            MyWriter.WriteLine("<h4><strong>Ruta Archivo Python: " + Form1.RutaP + "</strong></h4>");
+
+            MyWriter.WriteLine("<table align=\"center\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">");
+            MyWriter.WriteLine("<thead>");
+            MyWriter.WriteLine("<tr>");
+            MyWriter.WriteLine("<th scope=\"col\">#</th>");
+            MyWriter.WriteLine("<th scope=\"col\">LEXEMA</th>");
+            MyWriter.WriteLine("<th scope=\"col\">TIPO</th>");
+            MyWriter.WriteLine("<th scope=\"col\">FILA</th>");
+            MyWriter.WriteLine("<th scope=\"col\">COLUMNA</th>");
+            MyWriter.WriteLine("</tr>");
+            MyWriter.WriteLine("</thead>");
+            MyWriter.WriteLine("<tbody>");
+            for (int p = 0; p < Program.TablaT.Count; p++)
             {
-                FileStream MyStream = new FileStream(saveFile.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                String[] auxVector3 = (String[])Program.TablaT[p];
+                MyWriter.WriteLine("<tr>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[0] + "</th>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[1] + "</th>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[2] + "</th>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[3] + "</th>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[4] + "</th>");
+                MyWriter.WriteLine("</tr>");
+            }
+            MyWriter.WriteLine("</tbody>");
+            MyWriter.WriteLine("</font>");
+            MyWriter.Close();
+            MyStream.Close();
+            MessageBox.Show("Reporte de Tokens Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Process.Start("chrome.exe", RutaH);
+
+
+
+        }
+
+        public void GenerateHTMLError()
+        {
+            String RutaH = Path.GetDirectoryName(Form1.Ruta) + "\\" + Path.GetFileNameWithoutExtension(Form1.Ruta) + "ErroresLexicos" + ".html";
+            if (Errores)
+            {
+
+                FileStream MyStream = new FileStream(RutaH, FileMode.Create, FileAccess.Write, FileShare.None);
                 StreamWriter MyWriter = new StreamWriter(MyStream);
                 MyWriter.WriteLine("<font size=\"2\" face=\"Segoe UI Emoji\" >");
-                MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE TOKENS</strong></h2>");
+                MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE ERRORES LEXICOS</strong></h2>");
+
+                MyWriter.WriteLine("<h4><strong>Hora y Fecha: " + DateTime.Now.ToString() + "</strong></h4>");
+                MyWriter.WriteLine("<h4><strong>Ruta Archivos HTML: " + RutaH + "</strong></h4>");
+                MyWriter.WriteLine("<h4><strong>Ruta Archivo C#: " + Form1.RutaC + "</strong></h4>");
+                MyWriter.WriteLine("<h4><strong>Ruta Archivo Python: " + Form1.RutaP + "</strong></h4>");
+
                 MyWriter.WriteLine("<table align=\"center\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">");
                 MyWriter.WriteLine("<thead>");
                 MyWriter.WriteLine("<tr>");
                 MyWriter.WriteLine("<th scope=\"col\">#</th>");
-                MyWriter.WriteLine("<th scope=\"col\">LEXEMA</th>");
-                MyWriter.WriteLine("<th scope=\"col\">TIPO</th>");
+                MyWriter.WriteLine("<th scope=\"col\">ERROR</th>");
+                MyWriter.WriteLine("<th scope=\"col\">DESCRIPCION</th>");
                 MyWriter.WriteLine("<th scope=\"col\">FILA</th>");
                 MyWriter.WriteLine("<th scope=\"col\">COLUMNA</th>");
                 MyWriter.WriteLine("</tr>");
                 MyWriter.WriteLine("</thead>");
                 MyWriter.WriteLine("<tbody>");
-                for (int p = 0; p < Program.TablaT.Count; p++)
+                for (int p = 0; p < Program.TablaEL.Count; p++)
                 {
-                    String[] auxVector3 = (String[])Program.TablaT[p];
+                    String[] auxVector3 = (String[])Program.TablaEL[p];
                     MyWriter.WriteLine("<tr>");
                     MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[0] + "</th>");
                     MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[1] + "</th>");
@@ -288,62 +337,13 @@ namespace Proyecto2_Scanner_LL1Parser
                 MyWriter.WriteLine("</font>");
                 MyWriter.Close();
                 MyStream.Close();
-                MessageBox.Show("Reporte de Tokens Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Process.Start("chrome.exe", saveFile.FileName);
-            }
-
-
-        }
-
-        public void GenerateHTMLError()
-        {
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "Archivo HTML (*.html)|*.html";
-            saveFile.DefaultExt = "html";
-            saveFile.AddExtension = true;
-
-            if (Errores)
-            {
-                saveFile.Title = "Guardar Tabla de Errores Lexicos";
-                if (saveFile.ShowDialog() == DialogResult.OK)
-                {
-                    FileStream MyStream = new FileStream(saveFile.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
-                    StreamWriter MyWriter = new StreamWriter(MyStream);
-                    MyWriter.WriteLine("<font size=\"2\" face=\"Segoe UI Emoji\" >");
-                    MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE ERRORES LEXICOS</strong></h2>");
-                    MyWriter.WriteLine("<table align=\"center\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">");
-                    MyWriter.WriteLine("<thead>");
-                    MyWriter.WriteLine("<tr>");
-                    MyWriter.WriteLine("<th scope=\"col\">#</th>");
-                    MyWriter.WriteLine("<th scope=\"col\">ERROR</th>");
-                    MyWriter.WriteLine("<th scope=\"col\">DESCRIPCION</th>");
-                    MyWriter.WriteLine("<th scope=\"col\">FILA</th>");
-                    MyWriter.WriteLine("<th scope=\"col\">COLUMNA</th>");
-                    MyWriter.WriteLine("</tr>");
-                    MyWriter.WriteLine("</thead>");
-                    MyWriter.WriteLine("<tbody>");
-                    for (int p = 0; p < Program.TablaEL.Count; p++)
-                    {
-                        String[] auxVector3 = (String[])Program.TablaEL[p];
-                        MyWriter.WriteLine("<tr>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[0] + "</th>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[1] + "</th>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[2] + "</th>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[3] + "</th>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[4] + "</th>");
-                        MyWriter.WriteLine("</tr>");
-                    }
-                    MyWriter.WriteLine("</tbody>");
-                    MyWriter.WriteLine("</font>");
-                    MyWriter.Close();
-                    MyStream.Close();
-                    MessageBox.Show("Reporte de Errores Lexicos Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Process.Start("chrome.exe", saveFile.FileName);
-                }
+                MessageBox.Show("Reporte de Errores Lexicos Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Process.Start("chrome.exe", RutaH);
+                
             }
             else
             {
-                MessageBox.Show("No hay errores que mostrar", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No hay errores Lexicos que mostrar", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

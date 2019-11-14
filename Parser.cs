@@ -21,6 +21,7 @@ namespace Proyecto2_Scanner_LL1Parser
         String PythonCode = "";
         String ConsoleOutPut="";
         int Tabulaciones = 0;
+        public static String RutaImg, DirImg; //Guarda Imagen de Grafica de Vector
 
         public Parser()
         {
@@ -322,14 +323,14 @@ namespace Proyecto2_Scanner_LL1Parser
                             {
                                 NextToken("FALSE", MainPointer);
                                 InsertarSimbolo(IDTEMP, Tipo, ReturnLexeme(MainPointer - 1));
-                                AppendPythonCode(IDTEMP + " = " + ReturnLexeme(MainPointer - 1));
+                                AppendPythonCode(IDTEMP + " = " + "False");
                                 break;
                             }
                             else if (CompareToken("TRUE", MainPointer))
                             {
                                 NextToken("TRUE", MainPointer);
                                 InsertarSimbolo(IDTEMP, Tipo, ReturnLexeme(MainPointer - 1));
-                                AppendPythonCode(IDTEMP + " = " + ReturnLexeme(MainPointer - 1));
+                                AppendPythonCode(IDTEMP + " = " + "True");
                                 break;
                             }
                             else
@@ -964,14 +965,14 @@ namespace Proyecto2_Scanner_LL1Parser
                                     NextToken("FALSE", MainPointer);
                                     TempValor2 = ReturnLexeme(MainPointer - 1);
                                     InsertarSimbolo(IDTEMP, Tipo, TempValor + TempValor2);
-                                    AppendPythonCode(IDTEMP + " = " + TempID1 + " + " + ReturnLexeme(MainPointer - 1));
+                                    AppendPythonCode(IDTEMP + " = " + TempID1 + " + " + "False");
                                 }
                                 else if (CompareToken("TRUE", MainPointer))
                                 {
                                     NextToken("TRUE", MainPointer);
                                     TempValor2 = ReturnLexeme(MainPointer - 1);
                                     InsertarSimbolo(IDTEMP, Tipo, TempValor + TempValor2);
-                                    AppendPythonCode(IDTEMP + " = " + TempID1 + " + " + ReturnLexeme(MainPointer - 1));
+                                    AppendPythonCode(IDTEMP + " = " + TempID1 + " + " + "True");
                                 }
                             }
                             else
@@ -1068,7 +1069,15 @@ namespace Proyecto2_Scanner_LL1Parser
                 {
                     NextToken("ID", MainPointer);
                     TempString = TempString + ValorSimbolo(ReturnLexeme(MainPointer - 1));
-                    TempParam = TempParam + ReturnLexeme(MainPointer - 1);
+                    if (TipoSimbolo(ReturnLexeme(MainPointer - 1)).Equals("STRING"))
+                    {
+                        TempParam = TempParam + ReturnLexeme(MainPointer - 1);
+                    }
+                    else
+                    {
+                        TempParam = TempParam + " str("+ReturnLexeme(MainPointer - 1)+") ";
+                    }
+                    
                 }
                 else if (CompareToken("NUMERO", MainPointer))
                 {
@@ -1387,7 +1396,7 @@ namespace Proyecto2_Scanner_LL1Parser
                 NextToken("NUMERO", MainPointer);
                 TempCase = float.Parse(ReturnLexeme(MainPointer - 1));
                 NextToken("DOS_PUNTOS", MainPointer);
-                AppendPythonCode("if " + Parametro + " == " + ReturnLexeme(MainPointer - 1));
+                AppendPythonCode("if " + Parametro + " == " + ReturnLexeme(MainPointer - 2) + ":");
                 if (TempCase == Param) { BeginCase = MainPointer; }
                 Tabulaciones++;
                 SetNextBlock();
@@ -1400,7 +1409,7 @@ namespace Proyecto2_Scanner_LL1Parser
                 NextToken("NUMERO_DECIMAL", MainPointer);
                 TempCase = float.Parse(ReturnLexeme(MainPointer - 1));
                 NextToken("DOS_PUNTOS", MainPointer);
-                AppendPythonCode("if " + Parametro + " == " + ReturnLexeme(MainPointer - 1));
+                AppendPythonCode("if " + Parametro + " == " + ReturnLexeme(MainPointer - 2) + ":");
                 if (TempCase == Param) { BeginCase = MainPointer; }
                 Tabulaciones++;
                 SetNextBlock();
@@ -1418,7 +1427,7 @@ namespace Proyecto2_Scanner_LL1Parser
                     NextToken("NUMERO", MainPointer);
                     TempCase = float.Parse(ReturnLexeme(MainPointer - 1));
                     NextToken("DOS_PUNTOS", MainPointer);
-                    AppendPythonCode("elif " + Parametro + " == " + ReturnLexeme(MainPointer - 1));
+                    AppendPythonCode("elif " + Parametro + " == " + ReturnLexeme(MainPointer - 2) + ":");
                     if (TempCase == Param) { BeginCase = MainPointer; }
                     Tabulaciones++;
                     SetNextBlock();
@@ -1432,7 +1441,7 @@ namespace Proyecto2_Scanner_LL1Parser
                     NextToken("NUMERO_DECIMAL", MainPointer);
                     TempCase = float.Parse(ReturnLexeme(MainPointer - 1));
                     NextToken("DOS_PUNTOS", MainPointer);
-                    AppendPythonCode("elif " + Parametro + " == " + ReturnLexeme(MainPointer - 1));
+                    AppendPythonCode("elif " + Parametro + " == " + ReturnLexeme(MainPointer - 2) + ":");
                     if (TempCase == Param) { BeginCase = MainPointer; }
                     Tabulaciones++;
                     SetNextBlock();
@@ -1774,6 +1783,28 @@ namespace Proyecto2_Scanner_LL1Parser
 
         }
 
+        private void GraficarVector()
+        {
+            String TempValor;
+            String TempID;
+            String TempString;
+
+            NextToken("GRAFICARVECTOR", MainPointer);
+            NextToken("ABRE_PARENTESIS",MainPointer);
+            NextToken("ID",MainPointer);
+            TempID = ReturnLexeme(MainPointer-1);
+            TempValor = ValorSimbolo(TempID);
+            NextToken("COMA",MainPointer);
+            NextToken("COMILLAS_DOBLES",MainPointer);
+            NextToken("CADENA",MainPointer);
+            TempString = ReturnLexeme(MainPointer-1);
+            NextToken("COMILLAS_DOBLES", MainPointer);
+            NextToken("CIERRA_PARENTESIS", MainPointer);
+            NextToken("PUNTO_COMA",MainPointer);
+            AppendPythonCode("graficarVector("+TempID+", "+"\""+TempString+"\")");
+            GenerateVectorGraph(TempValor,TempString);
+        }
+
 
         //FUNCION QUE DEFINE QUE BLOQUE O SENTENCIA SE ANALIZARA DESPUES
         private void SetNextBlock()
@@ -1827,99 +1858,162 @@ namespace Proyecto2_Scanner_LL1Parser
             {
                 BloqueWHILE();
             }
+            else if (CompareToken("GRAFICARVECTOR", MainPointer))
+            {
+                GraficarVector();
+            }
 
 
         }
 
         public void GenerateHTMLSymbol()
         {
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "Archivo HTML (*.html)|*.html";
-            saveFile.DefaultExt = "html";
-            saveFile.AddExtension = true;
-            saveFile.Title = "Guardar Tabla de Simbolos";
-            if (saveFile.ShowDialog() == DialogResult.OK)
+            String RutaH = Path.GetDirectoryName(Form1.Ruta) + "\\" + Path.GetFileNameWithoutExtension(Form1.Ruta) + "TablaSimbolos" + ".html";
+
+            FileStream MyStream = new FileStream(RutaH, FileMode.Create, FileAccess.Write, FileShare.None);
+            StreamWriter MyWriter = new StreamWriter(MyStream);
+
+            MyWriter.WriteLine("<font size=\"2\" face=\"Segoe UI Emoji\" >");
+            MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE SIMBOLOS</strong></h2>");
+
+            MyWriter.WriteLine("<h4><strong>Hora y Fecha: "+DateTime.Now.ToString()+"</strong></h4>");
+            MyWriter.WriteLine("<h4><strong>Ruta Archivos HTML: "+ RutaH + "</strong></h4>");
+            MyWriter.WriteLine("<h4><strong>Ruta Archivo C#: "+Form1.RutaC+"</strong></h4>");
+            MyWriter.WriteLine("<h4><strong>Ruta Archivo Python: " + Form1.RutaP + "</strong></h4>");
+
+            MyWriter.WriteLine("<table align=\"center\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">");
+            MyWriter.WriteLine("<thead>");
+            MyWriter.WriteLine("<tr>");
+            MyWriter.WriteLine("<th scope=\"col\">ID</th>");
+            MyWriter.WriteLine("<th scope=\"col\">Tipo</th>");
+            MyWriter.WriteLine("<th scope=\"col\">Valor</th>");
+            MyWriter.WriteLine("</tr>");
+            MyWriter.WriteLine("</thead>");
+            MyWriter.WriteLine("<tbody>");
+            for (int p = 0; p < Program.TablaS.Count; p++)
             {
-                FileStream MyStream = new FileStream(saveFile.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                String[] auxVector3 = (String[])Program.TablaS[p];
+                MyWriter.WriteLine("<tr>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[0] + "</th>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[1] + "</th>");
+                MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[2] + "</th>");
+                MyWriter.WriteLine("</tr>");
+            }
+            MyWriter.WriteLine("</tbody>");
+            MyWriter.WriteLine("</font>");
+            MyWriter.Close();
+            MyStream.Close();
+            MessageBox.Show("Reporte de Simbolos Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Process.Start("chrome.exe", RutaH);
+          
+
+        }
+
+        public void GenerateHTMLError()
+        {
+            String RutaH = Path.GetDirectoryName(Form1.Ruta) + "\\" + Path.GetFileNameWithoutExtension(Form1.Ruta) + "ErroresSintacticos" + ".html";
+
+            if (Errores)
+            {
+
+                FileStream MyStream = new FileStream(RutaH, FileMode.Create, FileAccess.Write, FileShare.None);
                 StreamWriter MyWriter = new StreamWriter(MyStream);
                 MyWriter.WriteLine("<font size=\"2\" face=\"Segoe UI Emoji\" >");
-                MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE SIMBOLOS</strong></h2>");
+                MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE ERRORES SINTACTICOS </strong></h2>");
+
+                MyWriter.WriteLine("<h4><strong>Hora y Fecha: " + DateTime.Now.ToString() + "</strong></h4>");
+                MyWriter.WriteLine("<h4><strong>Ruta Archivos HTML: " + RutaH + "</strong></h4>");
+                MyWriter.WriteLine("<h4><strong>Ruta Archivo C#: " + Form1.RutaC + "</strong></h4>");
+                MyWriter.WriteLine("<h4><strong>Ruta Archivo Python: " + Form1.RutaP + "</strong></h4>");
+
                 MyWriter.WriteLine("<table align=\"center\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">");
                 MyWriter.WriteLine("<thead>");
                 MyWriter.WriteLine("<tr>");
-                MyWriter.WriteLine("<th scope=\"col\">ID</th>");
-                MyWriter.WriteLine("<th scope=\"col\">Tipo</th>");
-                MyWriter.WriteLine("<th scope=\"col\">Valor</th>");
+                MyWriter.WriteLine("<th scope=\"col\">#</th>");
+                MyWriter.WriteLine("<th scope=\"col\">ERROR</th>");
+                MyWriter.WriteLine("<th scope=\"col\">FILA</th>");
+                MyWriter.WriteLine("<th scope=\"col\">COLUMNA</th>");
                 MyWriter.WriteLine("</tr>");
                 MyWriter.WriteLine("</thead>");
                 MyWriter.WriteLine("<tbody>");
-                for (int p = 0; p < Program.TablaS.Count; p++)
+                for (int p = 0; p < Program.TablaES.Count; p++)
                 {
-                    String[] auxVector3 = (String[])Program.TablaS[p];
+                    String[] auxVector3 = (String[])Program.TablaES[p];
                     MyWriter.WriteLine("<tr>");
                     MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[0] + "</th>");
                     MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[1] + "</th>");
                     MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[2] + "</th>");
+                    MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[3] + "</th>");
                     MyWriter.WriteLine("</tr>");
                 }
                 MyWriter.WriteLine("</tbody>");
                 MyWriter.WriteLine("</font>");
                 MyWriter.Close();
                 MyStream.Close();
-                MessageBox.Show("Reporte de Simbolos Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Process.Start("chrome.exe", saveFile.FileName);
-            }
+                MessageBox.Show("Reporte de Errores Sintacticos Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Process.Start("chrome.exe", RutaH);
 
-        }
-
-        public void GenerateHTMLError()
-        {
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "Archivo HTML (*.html)|*.html";
-            saveFile.DefaultExt = "html";
-            saveFile.AddExtension = true;
-
-            if (Errores)
-            {
-                saveFile.Title = "Guardar Tabla de Errores Sintacticos";
-                if (saveFile.ShowDialog() == DialogResult.OK)
-                {
-                    FileStream MyStream = new FileStream(saveFile.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
-                    StreamWriter MyWriter = new StreamWriter(MyStream);
-                    MyWriter.WriteLine("<font size=\"2\" face=\"Segoe UI Emoji\" >");
-                    MyWriter.WriteLine("<h2 style=\"text - align: center; \"><strong>TABLA DE ERRORES SINTACTICOS </strong></h2>");
-                    MyWriter.WriteLine("<table align=\"center\" border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">");
-                    MyWriter.WriteLine("<thead>");
-                    MyWriter.WriteLine("<tr>");
-                    MyWriter.WriteLine("<th scope=\"col\">#</th>");
-                    MyWriter.WriteLine("<th scope=\"col\">ERROR</th>");
-                    MyWriter.WriteLine("<th scope=\"col\">FILA</th>");
-                    MyWriter.WriteLine("<th scope=\"col\">COLUMNA</th>");
-                    MyWriter.WriteLine("</tr>");
-                    MyWriter.WriteLine("</thead>");
-                    MyWriter.WriteLine("<tbody>");
-                    for (int p = 0; p < Program.TablaES.Count; p++)
-                    {
-                        String[] auxVector3 = (String[])Program.TablaES[p];
-                        MyWriter.WriteLine("<tr>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[0] + "</th>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[1] + "</th>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[2] + "</th>");
-                        MyWriter.WriteLine("<th scope=\"col\">" + auxVector3[3] + "</th>");
-                        MyWriter.WriteLine("</tr>");
-                    }
-                    MyWriter.WriteLine("</tbody>");
-                    MyWriter.WriteLine("</font>");
-                    MyWriter.Close();
-                    MyStream.Close();
-                    MessageBox.Show("Reporte de Errores Sintacticos Generado Correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Process.Start("chrome.exe", saveFile.FileName);
-                }
             }
             else
             {
-                MessageBox.Show("No hay errores que mostrar", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No hay errores sintacticos que mostrar", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        public void GenerateVectorGraph(String PlainVector,String Name)
+        {
+            if (!Errores)
+            {
+                SaveFileDialog saveFile = new SaveFileDialog();
+                saveFile.Filter = "Archivo DOT (*.dot)|*.dot";
+                saveFile.DefaultExt = "dot";
+                saveFile.AddExtension = true;
+                saveFile.FileName = Name;
+
+                saveFile.Title = "Guardar Grafico";
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    FileStream MyStream = new FileStream(saveFile.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                    StreamWriter MyWriter = new StreamWriter(MyStream);                  
+                    String[] Vector = PlainVector.Split(',');
+                    MyWriter.WriteLine("digraph G {");
+                    MyWriter.WriteLine("Inicio [shape=box];");
+                    MyWriter.WriteLine("Inicio -> " + Vector[0]);
+                    for (int i = 0;i<Vector.Length-1;i++)
+                    {
+                        MyWriter.WriteLine(Vector[i]+" [shape=box];");
+                        MyWriter.WriteLine(Vector[i] + "->" + Vector[i + 1] + ";");
+                        MyWriter.WriteLine(Vector[i+1] + " [shape=box];");
+                    }
+                    int aux = Vector.Length - 1;
+                    MyWriter.WriteLine(Vector[Vector.Length - 1] + "->" + "Final" + ";");
+                    MyWriter.WriteLine("Final [shape=box];");
+
+                    MyWriter.WriteLine("}");
+                    MyWriter.Close();
+                    MyStream.Close();
+                    MessageBox.Show("Vector Graficado Correctamente", "Grafico", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    //SE MANDO COMANDO AL SHELL DEL SISTEMA 
+                    RutaImg = Path.GetDirectoryName(saveFile.FileName) + "\\" + Path.GetFileNameWithoutExtension(saveFile.FileName);
+                    DirImg = saveFile.FileName;
+                    String Command = "dot.exe -Tpng " + saveFile.FileName + " -o " + RutaImg + ".png";
+                    Process cmd = new Process();
+                    cmd.StartInfo.FileName = "cmd.exe";
+                    cmd.StartInfo.RedirectStandardInput = true;
+                    cmd.StartInfo.RedirectStandardOutput = true;
+                    cmd.StartInfo.CreateNoWindow = false;
+                    cmd.StartInfo.UseShellExecute = false;
+                    cmd.Start();
+                    cmd.StandardInput.WriteLine(Command);
+                    cmd.StandardInput.Flush();
+                    cmd.StandardInput.Close();
+                    cmd.WaitForExit();
+                    Console.WriteLine(cmd.StandardOutput.ReadToEnd());
+                    Console.Read();
+                }
+            }
+
         }
 
     }

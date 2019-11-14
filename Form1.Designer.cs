@@ -51,6 +51,10 @@
             this.limpiarDocumentosRecientesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acerdaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.abrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.saveFileDialog2 = new System.Windows.Forms.SaveFileDialog();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBtn)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -166,6 +170,7 @@
             // archivoToolStripMenuItem
             // 
             this.archivoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.abrirToolStripMenuItem,
             this.guardarComoToolStripMenuItem,
             this.salirToolStripMenuItem});
             this.archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
@@ -175,13 +180,14 @@
             // guardarComoToolStripMenuItem
             // 
             this.guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
-            this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.guardarComoToolStripMenuItem.Text = "Guardar Como";
+            this.guardarComoToolStripMenuItem.Click += new System.EventHandler(this.GuardarComoToolStripMenuItem_Click);
             // 
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.salirToolStripMenuItem.Text = "Salir";
             // 
             // documentoToolStripMenuItem
@@ -210,7 +216,7 @@
             this.tablaDeErroresSintacticosToolStripMenuItem});
             this.generarDeportesToolStripMenuItem.Name = "generarDeportesToolStripMenuItem";
             this.generarDeportesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.generarDeportesToolStripMenuItem.Text = "Generar Deportes";
+            this.generarDeportesToolStripMenuItem.Text = "Generar Reportes";
             // 
             // tablaDeTokensToolStripMenuItem
             // 
@@ -260,6 +266,28 @@
             this.acerdaDeToolStripMenuItem.Name = "acerdaDeToolStripMenuItem";
             this.acerdaDeToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.acerdaDeToolStripMenuItem.Text = "Acerda de ...";
+            // 
+            // abrirToolStripMenuItem
+            // 
+            this.abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
+            this.abrirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.abrirToolStripMenuItem.Text = "Abrir";
+            this.abrirToolStripMenuItem.Click += new System.EventHandler(this.AbrirToolStripMenuItem_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Archivo C#|*.cs";
+            this.openFileDialog1.Title = "Abrir Entrada C#";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "Archivo C#|*.cs";
+            this.saveFileDialog1.Title = "Guardar Entrada C#";
+            // 
+            // saveFileDialog2
+            // 
+            this.saveFileDialog2.Title = "Guardar Archivos de Salida";
             // 
             // Form1
             // 
@@ -315,6 +343,10 @@
         private System.Windows.Forms.ToolStripMenuItem limpiarDocumentosRecientesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem acerdaDeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tablaDeErroresSintacticosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem abrirToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog2;
     }
 }
 
